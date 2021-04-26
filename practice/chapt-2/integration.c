@@ -157,11 +157,134 @@ bool mergeTwoList(SqList &list1, SqList &list2, SqList &list) {
 }
 
 // 2.2.3-8: 互换一维数组中的两个顺序表
-// 2.2.3-9: 查找x，若找不到插入表中
+int changePos(int l[],int m,int n){
+    int i=0,j=0,k=0;
+    int tmp=0;
+    
+    for(;i<n;i++){
+    tmp=l[m+n-1];
+        for(j=m+n-1;j>0;j--){
+            l[j]=l[j-1];
+        }
+        l[0]=tmp;
+        
+    }
+    return 0;
 
-// 2.2.3-10
-// 2.2.3-12
-// 2.2.3-13
+}
+// 2.2.3-9: 查找x，若找到，与后面的交换；若找不到，插入表中
+int fun(int l[],int left,int right,int x){
+    int i=0,j=0,k=0;
+    int mid=(left+right)/2;
+    if(left==right){
+//      printf("%d\n",left);
+        if(l[left]<x)return left;
+        if(l[left]>x)return left-1;
+    }
+//  printf("%d\n",mid);
+    if(l[mid]==x){
+        return mid;
+    }
+    if(l[mid]<x){
+        return fun(l,mid+1,right,x);
+    }
+    if(l[mid]>x){
+        return fun(l,left,mid-1,x);
+    }
+}
+void findReplace(int List[], int length, int x){
+
+    if(x>=List[length-1]){
+        List[length]=x;
+    }else if(x<List[0]){
+        for(int i=length;i>0;i--){
+            List[i]=List[i-1];
+        }
+        List[0]=x;
+    }else{
+        int pos=fun(List,0,length-1,x);
+        printf("%d\n",pos);
+        if(List[pos]==x){
+            int tmp=List[pos+1];
+            List[pos+1]=x;
+            List[pos]=tmp;
+        }
+        else{
+            for(int j=length;j>pos+1;j--){
+                List[j]=List[j-1];
+            }
+            List[pos+1]=x;
+        }
+    }
+
+}
+// 2.2.3-10 循环移动
+int fun(int l[],int m,int n){
+    int mid=(m+n)/2;
+    for(int i=0;i<=(n-m)/2;i++){ // m+i<=n-i
+        int tmp=l[n-i];
+        l[n-i]=l[m+i];
+        l[m+i]=tmp;
+    }
+    return 0;
+
+}
+// 2.2.3-12 寻找主元素
+int findMain(int l[],int n){
+    int tmp=l[0];
+    int count=0;
+    for(int i=0;i<n;i++){
+        if(l[i]==tmp){
+            count++;
+        }else{
+        if(count>0){
+            count--;
+        }else{
+                count++;
+                tmp=l[i];
+            }
+        }
+    }
+    count=0;
+    for(int i=0;i<n;i++){
+        if(l[i]==tmp){
+            count++;
+        }
+    }
+    if(count>n/2)return tmp;
+    else return -1;
+}
+
+// 2.2.3-13 寻找最小正整数
+int findMinInt(int l[],int n){
+    int note[n]={0};
+    int count = 0;
+    int min = 100000;
+    for(int i=0;i<n;i++){ // m+i<=n-i
+        if(l[i]>0 && l[i]<=n)
+        {
+            note[l[i]-1]=1;
+        }
+        else if(l[i]>=n)
+        {
+            if(l[i]<min)
+                min = l[i];
+            count++;
+        }
+    }
+    if(count ==n)
+        return count-1;
+    else
+    {
+        for(int i=0;i<n;i++)
+        {
+            if(note[i]==0)
+                return i+1;
+        }
+    }
+    return -1;
+
+}
 int main() {
     /*题目1测试*/
 //    SqList l;
@@ -264,22 +387,65 @@ int main() {
 //    return 0;
 
     /*题目7测试*/
-    SqList l;
-    SqList l1;
-    SqList l2;
-    l1.length = 3;
-    l2.length = 2;
-    l1.data[0] = 1;
-    l1.data[1] = 10;
-    l1.data[2] = 1100;
-    l2.data[0] = 4;
-    l2.data[1] = 100;
-    mergeTwoList(l1, l2, l);
+    // SqList l;
+    // SqList l1;
+    // SqList l2;
+    // l1.length = 3;
+    // l2.length = 2;
+    // l1.data[0] = 1;
+    // l1.data[1] = 10;
+    // l1.data[2] = 1100;
+    // l2.data[0] = 4;
+    // l2.data[1] = 100;
+    // mergeTwoList(l1, l2, l);
 
 
-    printf("\n");
-    for (int i = 0; i < l.length; ++i) {
-        printf("%d\t", l.data[i]);
-    }
+    // printf("\n");
+    // for (int i = 0; i < l.length; ++i) {
+    //     printf("%d\t", l.data[i]);
+    // }
+
+    /*题目8测试*/
+    // int testData[] = {1,2,3,4,5,6,7,8,9,10};
+    // changePos(testData, 3, 7);
+
+    // printf("\n");
+    // for (int i = 0; i < 10; ++i) {
+    //     printf("%d\t", testData[i]);
+    // }
+
+
+    /*题目9测试*/
+
+    // int List[7]={1,2,3,5,6,9,10};
+    // int x=0;
+    // scanf("%d",&x);
+    // findReplace(List,7,x);
+    // int i;
+    // for(i=0;i<7;i++){
+    //     printf("%d ",List[i]);
+    // }
+
+    /*题目10测试*/
+    // int p=3;
+    // int List[6]={1,2,3,4,5,6};
+    // fun(List,0,p-1);
+    // fun(List,p,5);
+    // fun(List,0,5);
+    // for(int i=0;i<6;i++){
+    //     printf("%d ",List[i]);
+    // }
+    /*题目12测试*/
+    // int p=3;
+    // int List[]={1,0,1,0,2,1,1,4,1};
+    // p=findMain(List,9);
+    // printf("%d ",p);
+    /*题目13测试*/
+    int p=3;
+    int List[6]={1,2,9,7,5,6};
+    p = findMinInt(List,6);
+    printf("%d \n",p);
+
     return 0;
+
 }
